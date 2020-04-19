@@ -8,11 +8,11 @@ BinaryTree::TreeNode::TreeNode() : value(0), left(nullptr), right(nullptr) {};
 BinaryTree::TreeNode::TreeNode(int value) : value(value), left(nullptr), right(nullptr) {};
 BinaryTree::TreeNode* BinaryTree::TreeNode::GetLeftNode() const
 {
-	return left;
+    return left;
 }
 BinaryTree::TreeNode* BinaryTree::TreeNode::GetRightNode() const
 {
-	return right;
+    return right;
 }
 int BinaryTree::TreeNode::GetValue() const
 {
@@ -55,15 +55,25 @@ BinaryTree::TreeNode* BinaryTree::Search(int val) const
 }
 void BinaryTree::CreateMinimalBST(int* arrptr, int start, int end)
 {
-    if (end < start)
-        return;
+    constexpr int  validRangeForInsert = 2;
     int mid = (start + end) / 2;
     Insert(arrptr[mid]);
-    CreateMinimalBST(arrptr, start, mid - 1);
-    CreateMinimalBST(arrptr, mid + 1, end);
+    int rightMid = mid + 1;
+    int leftMid = mid - 1;
+    if (end - start > validRangeForInsert)
+    {
+        CreateMinimalBST(arrptr, rightMid, end);
+        CreateMinimalBST(arrptr, start, leftMid);
+    }
+    else
+    {
+        Insert(arrptr[rightMid]);
+        if (end - start == validRangeForInsert)
+            Insert(arrptr[leftMid]);
+    }
 }
 
-BinaryTree::TreeNode* BinaryTree::search (TreeNode* node, int val) const
+BinaryTree::TreeNode* BinaryTree::search(TreeNode* node, int val) const
 {
     if (node == nullptr)
         return nullptr;
@@ -71,7 +81,7 @@ BinaryTree::TreeNode* BinaryTree::search (TreeNode* node, int val) const
         return node;
     return search(val < node->GetValue() ? node->GetLeftNode() : node->GetRightNode(), val);
 }
-void BinaryTree::insert (TreeNode* currentNode, int val)
+void BinaryTree::insert(TreeNode* currentNode, int val)
 {
     bool nextIsLess = val < currentNode->GetValue();
     TreeNode* next = nextIsLess
