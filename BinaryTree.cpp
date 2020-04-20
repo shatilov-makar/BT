@@ -53,24 +53,18 @@ BinaryTree::TreeNode* BinaryTree::Search(int val) const
 {
     return search(root, val);
 }
-void BinaryTree::CreateMinimalBST(int* arrptr, int start, int end)
+BinaryTree::TreeNode* BinaryTree::CreateMinimalBST(int* arrptr, int start, int end)
 {
-    constexpr int  validRangeForInsert = 2;
+    if (end < start)
+        return nullptr;
+    if (end == start)
+        return new TreeNode(arrptr[start]);
     int mid = (start + end) / 2;
-    Insert(arrptr[mid]);
-    int rightMid = mid + 1;
-    int leftMid = mid - 1;
-    if (end - start > validRangeForInsert)
-    {
-        CreateMinimalBST(arrptr, rightMid, end);
-        CreateMinimalBST(arrptr, start, leftMid);
-    }
-    else
-    {
-        Insert(arrptr[rightMid]);
-        if (end - start == validRangeForInsert)
-            Insert(arrptr[leftMid]);
-    }
+    TreeNode* node = new TreeNode(arrptr[mid]);
+    if (root->GetValue() == 0)
+        root = node;
+    node->SetRightNode(CreateMinimalBST(arrptr, mid + 1, end));
+    node->SetLeftNode(CreateMinimalBST(arrptr, start, mid - 1));
 }
 
 BinaryTree::TreeNode* BinaryTree::search(TreeNode* node, int val) const
